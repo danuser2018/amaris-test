@@ -4,10 +4,8 @@ import me.dserrano.inditex.prices.domain.model.Price;
 
 import java.time.LocalDateTime;
 
-public interface GetPrices {
+public interface GetPricePort {
 
-    Price getPrices(LocalDateTime date, String productId, String brandId) {
-
-    }
+    Price get(LocalDateTime date, String productId, String brandId);
 
 }
