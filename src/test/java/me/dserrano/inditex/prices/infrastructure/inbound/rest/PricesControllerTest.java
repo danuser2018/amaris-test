@@ -53,7 +53,7 @@ public class PricesControllerTest {
     @DisplayName("Given a valid request then domain is invoke")
     public void validRequestInvokeDomain() {
         // When
-        ResponseEntity<PricesResponse> result = classToTest.getPrices(date, productId, brandId);
+        classToTest.getPrices(date, productId, brandId);
 
         // Then
         verify(getPricePort).get(date, productId, brandId);

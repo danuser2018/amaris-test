@@ -28,7 +28,7 @@ public class PricesController {
 
     @GetMapping(path = "prices", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PricesResponse> getPrices(
-            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime date,
+            @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime date,
             @RequestParam("product-id") String productId,
             @RequestParam("brand-id") String brandId
     ) {

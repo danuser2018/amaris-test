@@ -9,7 +9,7 @@ public class PricesResponseMother {
             .productId("35455")
             .brandId("1")
             .priceList("1")
-            .startDate(LocalDateTime.of(2020, 06, 14, 0, 0, 0))
+            .startDate(LocalDateTime.of(2020, 6, 14, 0, 0, 0))
             .endDate(LocalDateTime.of(2020, 12, 31, 23, 59, 59))
             .price(new BigDecimal("35.50"))
             .currency("EUR")

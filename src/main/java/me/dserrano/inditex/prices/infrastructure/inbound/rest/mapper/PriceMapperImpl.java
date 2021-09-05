@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class PriceMapperImpl implements PriceMapper {
 
+    @Override
+    @NotNull
     public PricesResponse toPricesResponse(@NotNull Price price) {
         return PricesResponse.builder()
                 .productId(price.getProductId())

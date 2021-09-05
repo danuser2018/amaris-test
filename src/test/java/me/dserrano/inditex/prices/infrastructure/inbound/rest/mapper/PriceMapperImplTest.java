@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import static me.dserrano.inditex.prices.domain.model.PriceMother.PRICE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PriceMapperImplTest {
 
@@ -27,11 +26,4 @@ public class PriceMapperImplTest {
         assertEquals(PRICE.getValue(), result.getPrice());
         assertEquals(PRICE.getCurrency(), result.getCurrency());
     }
-
-    @Test
-    @DisplayName("Given a null price, then an IllegalArgumentException is thrown")
-    public void mapNullInstance() {
-        assertThrows(IllegalArgumentException.class, () -> classToTest.toPricesResponse(null));
-    }
-
 }
