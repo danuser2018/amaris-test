@@ -17,5 +17,6 @@ public class Price {
     LocalDateTime endDate;
     BigDecimal value;
     String currency;
+    int priority;
 
 }

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static me.dserrano.inditex.prices.domain.model.PriceMother.PRICE;
+import static me.dserrano.inditex.prices.domain.model.PriceMother.PRICE_1;
 import static me.dserrano.inditex.prices.infrastructure.outbound.h2.model.PriceEntityMother.PRICE_ENTITY_1;
 
 public class PriceEntityMapperImplTest {
@@ -19,7 +19,7 @@ public class PriceEntityMapperImplTest {
         Price result = priceEntityMapper.toPrice(PRICE_ENTITY_1);
 
         // Then
-        Assertions.assertEquals(PRICE, result);
+        Assertions.assertEquals(PRICE_1, result);
     }
 
 }

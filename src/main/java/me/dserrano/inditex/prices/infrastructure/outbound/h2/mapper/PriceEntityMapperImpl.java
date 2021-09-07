@@ -18,6 +18,7 @@ public class PriceEntityMapperImpl implements PriceEntityMapper {
                 .endDate(priceEntity.getEndDate())
                 .value(priceEntity.getPrice())
                 .currency(priceEntity.getCurrency())
+                .priority(priceEntity.getPriority())
                 .build();
     }
 }

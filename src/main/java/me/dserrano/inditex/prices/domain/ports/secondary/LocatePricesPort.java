@@ -4,9 +4,10 @@ import me.dserrano.inditex.prices.domain.model.Price;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-public interface LocatePricePort {
+public interface LocatePricesPort {
     @NotNull
-    Price get(@NotNull LocalDateTime date, @NotNull String productId, @NotNull String brandId);
+    List<Price> get(@NotNull LocalDateTime date, @NotNull String productId, @NotNull String brandId);
 
 }

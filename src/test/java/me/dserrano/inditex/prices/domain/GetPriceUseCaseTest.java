@@ -1,7 +1,7 @@
 package me.dserrano.inditex.prices.domain;
 
 import me.dserrano.inditex.prices.domain.model.Price;
-import me.dserrano.inditex.prices.domain.ports.secondary.LocatePricePort;
+import me.dserrano.inditex.prices.domain.ports.secondary.LocatePricesPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,8 +10,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-import static me.dserrano.inditex.prices.domain.model.PriceMother.PRICE;
+import static me.dserrano.inditex.prices.domain.model.PriceMother.PRICE_1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -20,7 +21,7 @@ import static org.mockito.Mockito.when;
 public class GetPriceUseCaseTest {
 
     private GetPriceUseCase classToTest;
-    private LocatePricePort locatePricePort;
+    private LocatePricesPort locatePricesPort;
 
     private final LocalDateTime date = LocalDateTime.of(2020, 6, 14, 10, 0, 0);
     private final String productId = "35455";
@@ -28,10 +29,10 @@ public class GetPriceUseCaseTest {
 
 
     @BeforeEach
-    private void setUp(@Mock LocatePricePort locatePricePort) {
-        this.locatePricePort = locatePricePort;
-        this.classToTest = new GetPriceUseCase(locatePricePort);
-        when(locatePricePort.get(date, productId, brandId)).thenReturn(PRICE);
+    private void setUp(@Mock LocatePricesPort locatePricesPort) {
+        this.locatePricesPort = locatePricesPort;
+        this.classToTest = new GetPriceUseCase(locatePricesPort);
+        when(locatePricesPort.get(date, productId, brandId)).thenReturn(List.of(PRICE_1));
     }
 
     @Test
@@ -41,7 +42,7 @@ public class GetPriceUseCaseTest {
         Price result = classToTest.get(date, productId, brandId);
 
         // Then
-        assertEquals(PRICE, result);
+        assertEquals(PRICE_1, result);
     }
 
     @Test
@@ -51,7 +52,7 @@ public class GetPriceUseCaseTest {
         classToTest.get(date, productId, brandId);
 
         // Then
-        verify(locatePricePort).get(date, productId, brandId);
+        verify(locatePricesPort).get(date, productId, brandId);
     }
 
 }

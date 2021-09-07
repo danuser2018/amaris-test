@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 
-import static me.dserrano.inditex.prices.domain.model.PriceMother.PRICE;
+import static me.dserrano.inditex.prices.domain.model.PriceMother.PRICE_1;
 import static me.dserrano.inditex.prices.infrastructure.inbound.rest.model.PricesResponseMother.PRICES_RESPONSE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -34,8 +34,8 @@ public class PricesControllerTest {
     private void setupMocks(@Mock GetPricePort getPricePort, @Mock PriceMapper priceMapper) {
         this.getPricePort = getPricePort;
         classToTest = new PricesController(getPricePort, priceMapper);
-        when(getPricePort.get(date, productId, brandId)).thenReturn(PRICE);
-        when(priceMapper.toPricesResponse(PRICE)).thenReturn(PRICES_RESPONSE);
+        when(getPricePort.get(date, productId, brandId)).thenReturn(PRICE_1);
+        when(priceMapper.toPricesResponse(PRICE_1)).thenReturn(PRICES_RESPONSE);
     }
 
     @Test
