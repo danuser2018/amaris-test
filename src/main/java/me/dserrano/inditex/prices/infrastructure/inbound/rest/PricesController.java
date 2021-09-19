@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @RestController
 public class PricesController {
@@ -32,11 +33,9 @@ public class PricesController {
             @RequestParam("product-id") String productId,
             @RequestParam("brand-id") String brandId
     ) {
-
-        Price price = getPricePort.get(date, productId, brandId);
-        PricesResponse pricesResponse = priceMapper.toPricesResponse(price);
-
-        return ResponseEntity.ok(pricesResponse);
+        Optional<Price> price = getPricePort.get(date, productId, brandId);
+        return price
+                .map(p -> ResponseEntity.ok(priceMapper.toPricesResponse(p)))
+                .orElse(ResponseEntity.ok().build());
     }
-
 }

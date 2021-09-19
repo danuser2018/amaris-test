@@ -53,7 +53,7 @@ public class LocatePriceAdapterTest {
     }
 
     @Test
-    @DisplayName("Given a date, productId and brandId that produces a result then a Price is returned")
+    @DisplayName("Given a date, productId and brandId then repository is invoked")
     public void validParametersInvokeRepository() {
         // Given
         when(pricesRepository.getPricesBy(date, productId, brandId)).thenReturn(List.of(PRICE_ENTITY_1));

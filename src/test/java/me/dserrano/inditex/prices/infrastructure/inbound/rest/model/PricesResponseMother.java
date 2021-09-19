@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 public class PricesResponseMother {
 
-    public static final PricesResponse PRICES_RESPONSE = PricesResponse.builder()
+    public static final PricesResponse PRICES_RESPONSE_1 = PricesResponse.builder()
             .productId("35455")
             .brandId("1")
             .priceList("1")
