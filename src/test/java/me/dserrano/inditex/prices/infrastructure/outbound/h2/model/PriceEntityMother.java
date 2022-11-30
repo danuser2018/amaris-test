@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 public class PriceEntityMother {
 
     public static final PriceEntity PRICE_ENTITY_1 = PriceEntity.builder()
+            .id(1L)
             .productId("35455")
             .brandId("1")
             .priceList("1")
@@ -17,6 +18,7 @@ public class PriceEntityMother {
             .build();
 
     public static final PriceEntity PRICE_ENTITY_2 = PriceEntity.builder()
+            .id(2L)
             .productId("35455")
             .brandId("1")
             .priceList("2")
@@ -28,6 +30,7 @@ public class PriceEntityMother {
             .build();
 
     public static final PriceEntity PRICE_ENTITY_3 = PriceEntity.builder()
+            .id(3L)
             .productId("35455")
             .brandId("1")
             .priceList("3")
@@ -39,6 +42,7 @@ public class PriceEntityMother {
             .build();
 
     public static final PriceEntity PRICE_ENTITY_4 = PriceEntity.builder()
+            .id(4L)
             .productId("35455")
             .brandId("1")
             .priceList("4")
