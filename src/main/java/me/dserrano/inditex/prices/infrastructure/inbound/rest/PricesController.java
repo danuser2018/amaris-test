@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+
 @RestController
-public class PricesController {
+public class PricesController implements PriceApi {
 
     private final GetPricePort getPricePort;
     private final PriceMapper priceMapper;
@@ -26,6 +27,7 @@ public class PricesController {
         this.getPricePort = getPricePort;
         this.priceMapper = priceMapper;
     }
+
 
     @GetMapping(path = "prices", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PricesResponse> getPrices(
