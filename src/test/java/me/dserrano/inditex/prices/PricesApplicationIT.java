@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -118,4 +119,18 @@ class PricesApplicationIT {
                 .andExpect(jsonPath("$.price", is(38.95)))
                 .andExpect(jsonPath("$.currency", is("EUR")));
     }
+
+    @Test
+    @DisplayName("Petición a las 21:00 del día 16/06/2021 del producto 35455 para la brand 1 (ZARA)")
+    void testEmptyResult() throws Exception {
+        mvc.perform(
+                        get("/prices")
+                                .queryParam("date", "2021-06-16T21:00:00")
+                                .queryParam("product-id", "35455")
+                                .queryParam("brand-id", "1")
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andExpect(content().string(""));
+    }
+
 }

@@ -36,6 +36,6 @@ public class PricesController {
         Optional<Price> price = getPricePort.get(date, productId, brandId);
         return price
                 .map(p -> ResponseEntity.ok(priceMapper.toPricesResponse(p)))
-                .orElse(ResponseEntity.ok().build());
+                .orElse(ResponseEntity.noContent().build());
     }
 }
