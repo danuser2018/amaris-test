@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 @ExtendWith(MockitoExtension.class)
@@ -76,7 +77,7 @@ public class PricesControllerTest {
         ResponseEntity<PricesResponse> result = classToTest.getPrices(date, productId, brandId);
 
         // Then
-        assertEquals(OK, result.getStatusCode());
+        assertEquals(NO_CONTENT, result.getStatusCode());
         assertNull(result.getBody());
     }
 
