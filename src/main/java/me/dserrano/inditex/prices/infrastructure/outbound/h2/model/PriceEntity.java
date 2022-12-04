@@ -37,7 +37,7 @@ public class PriceEntity {
     private LocalDateTime endDate;
 
     @Column(name = "PRICE", nullable = false)
-    private BigDecimal price;
+    private BigDecimal value;
 
     @Column(name = "CURR", nullable = false)
     private String currency;

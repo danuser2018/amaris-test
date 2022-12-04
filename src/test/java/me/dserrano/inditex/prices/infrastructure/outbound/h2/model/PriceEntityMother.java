@@ -12,7 +12,7 @@ public class PriceEntityMother {
             .priceList("1")
             .startDate(LocalDateTime.of(2020, 6, 14, 0, 0, 0))
             .endDate(LocalDateTime.of(2020, 12, 31, 23, 59, 59))
-            .price(new BigDecimal("35.50"))
+            .value(new BigDecimal("35.50"))
             .currency("EUR")
             .priority(0)
             .build();
@@ -24,7 +24,7 @@ public class PriceEntityMother {
             .priceList("2")
             .startDate(LocalDateTime.of(2020, 6, 14, 15, 0, 0))
             .endDate(LocalDateTime.of(2020, 6, 14, 18, 30, 0))
-            .price(new BigDecimal("25.45"))
+            .value(new BigDecimal("25.45"))
             .currency("EUR")
             .priority(1)
             .build();
@@ -36,7 +36,7 @@ public class PriceEntityMother {
             .priceList("3")
             .startDate(LocalDateTime.of(2020, 6, 15, 0, 0, 0))
             .endDate(LocalDateTime.of(2020, 6, 15, 11, 0, 0))
-            .price(new BigDecimal("35.50"))
+            .value(new BigDecimal("35.50"))
             .currency("EUR")
             .priority(1)
             .build();
@@ -48,7 +48,7 @@ public class PriceEntityMother {
             .priceList("4")
             .startDate(LocalDateTime.of(2020, 6, 15, 16, 0, 0))
             .endDate(LocalDateTime.of(2020, 12, 31, 23, 59, 59))
-            .price(new BigDecimal("38.95"))
+            .value(new BigDecimal("38.95"))
             .currency("EUR")
             .priority(1)
             .build();
