@@ -1,7 +1,7 @@
 package me.dserrano.inditex.prices.infrastructure.inbound.rest;
 
 import me.dserrano.inditex.prices.domain.model.PriceMother;
-import me.dserrano.inditex.prices.domain.ports.primary.GetPricePort;
+import me.dserrano.inditex.prices.domain.ports.primary.PricesService;
 import me.dserrano.inditex.prices.infrastructure.inbound.rest.mapper.PriceMapper;
 import me.dserrano.inditex.prices.infrastructure.inbound.rest.model.PricesResponseMother;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PricesControllerIT {
 
     @MockBean
-    private GetPricePort getPricePort;
+    private PricesService pricesService;
 
     @MockBean
     private PriceMapper priceMapper;
@@ -44,7 +44,7 @@ public class PricesControllerIT {
         String productId = "35455";
         String brandId = "1";
 
-        when(getPricePort.get(date, productId, brandId)).thenReturn(Optional.of(PriceMother.PRICE_1));
+        when(pricesService.getPricesBy(date, productId, brandId)).thenReturn(Optional.of(PriceMother.PRICE_1));
         when(priceMapper.toPricesResponse(PriceMother.PRICE_1)).thenReturn(PricesResponseMother.PRICES_RESPONSE_1);
 
         mockMvc.perform(get("/prices")

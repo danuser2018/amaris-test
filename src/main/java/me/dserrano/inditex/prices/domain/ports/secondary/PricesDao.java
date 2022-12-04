@@ -6,8 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface LocatePricesPort {
+public interface PricesDao {
     @NotNull
-    List<Price> get(@NotNull LocalDateTime date, @NotNull String productId, @NotNull String brandId);
-
+    List<Price> getPricesBy(@NotNull LocalDateTime date, @NotNull String productId, @NotNull String brandId);
 }

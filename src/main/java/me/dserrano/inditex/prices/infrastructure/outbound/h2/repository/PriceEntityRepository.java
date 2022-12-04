@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface PricesRepository extends JpaRepository<PriceEntity, Long> {
+public interface PriceEntityRepository extends JpaRepository<PriceEntity, Long> {
 
     @Query("SELECT p FROM PriceEntity p WHERE PRODUCT_ID = :productId AND BRAND_ID = :brandId AND :date BETWEEN START_DATE AND END_DATE")
     List<PriceEntity> getPricesBy(@Param("date") LocalDateTime date, @Param("productId") String productId, @Param("brandId") String brandId);

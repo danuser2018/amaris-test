@@ -1,7 +1,7 @@
 package me.dserrano.inditex.prices.infrastructure.inbound.rest;
 
 import me.dserrano.inditex.prices.domain.model.Price;
-import me.dserrano.inditex.prices.domain.ports.primary.GetPricePort;
+import me.dserrano.inditex.prices.domain.ports.primary.PricesService;
 import me.dserrano.inditex.prices.infrastructure.inbound.rest.mapper.PriceMapper;
 import me.dserrano.inditex.prices.infrastructure.inbound.rest.model.PricesResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +19,12 @@ import java.util.Optional;
 @RestController
 public class PricesController implements PriceApi {
 
-    private final GetPricePort getPricePort;
+    private final PricesService pricesService;
     private final PriceMapper priceMapper;
 
     @Autowired
-    public PricesController(GetPricePort getPricePort, PriceMapper priceMapper) {
-        this.getPricePort = getPricePort;
+    public PricesController(PricesService pricesService, PriceMapper priceMapper) {
+        this.pricesService = pricesService;
         this.priceMapper = priceMapper;
     }
 
@@ -35,7 +35,7 @@ public class PricesController implements PriceApi {
             @RequestParam("product-id") String productId,
             @RequestParam("brand-id") String brandId
     ) {
-        Optional<Price> price = getPricePort.get(date, productId, brandId);
+        Optional<Price> price = pricesService.getPricesBy(date, productId, brandId);
         return price
                 .map(p -> ResponseEntity.ok(priceMapper.toPricesResponse(p)))
                 .orElse(ResponseEntity.noContent().build());
