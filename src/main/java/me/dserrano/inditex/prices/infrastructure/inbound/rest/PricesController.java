@@ -33,7 +33,7 @@ public class PricesController implements PriceApi {
             @RequestParam("product-id") String productId,
             @RequestParam("brand-id") String brandId
     ) {
-        return Mono.justOrEmpty(pricesService.getPricesBy(date, productId, brandId))
+        return pricesService.getPricesBy(date, productId, brandId)
                 .map(priceMapper::toPricesResponse)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.noContent().build());

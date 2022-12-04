@@ -8,15 +8,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static me.dserrano.inditex.prices.domain.model.PriceMother.PRICE_1;
 import static me.dserrano.inditex.prices.domain.model.PriceMother.PRICE_2;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -39,11 +38,12 @@ public class PricesServiceAdapterTest {
         when(pricesDao.getPricesBy(date, productId, brandId)).thenReturn(List.of(PRICE_1));
 
         // When
-        Optional<Price> result = classToTest.getPricesBy(date, productId, brandId);
+        Mono<Price> result = classToTest.getPricesBy(date, productId, brandId);
 
         // Then
-        assertTrue(result.isPresent());
-        assertEquals(PRICE_1, result.get());
+        StepVerifier.create(result)
+                .expectNext(PRICE_1)
+                .expectComplete();
     }
 
     @Test
@@ -66,24 +66,25 @@ public class PricesServiceAdapterTest {
         when(pricesDao.getPricesBy(date, productId, brandId)).thenReturn(List.of(PRICE_1, PRICE_2));
 
         // When
-        Optional<Price> result = classToTest.getPricesBy(date, productId, brandId);
+        Mono<Price> result = classToTest.getPricesBy(date, productId, brandId);
 
         // Then
-        assertTrue(result.isPresent());
-        assertEquals(PRICE_2, result.get());
+        StepVerifier.create(result)
+                .expectNext(PRICE_2)
+                .expectComplete();
     }
 
     @Test
-    @DisplayName("Given a date, productId and brandId that results in no price, then an empty Optional is returned")
+    @DisplayName("Given a date, productId and brandId that results in no price, then an empty Mono is returned")
     public void validRequestReturnsNoPrice() {
         // Given
         when(pricesDao.getPricesBy(date, productId, brandId)).thenReturn(List.of());
 
         // When
-        Optional<Price> result = classToTest.getPricesBy(date, productId, brandId);
+        Mono<Price> result = classToTest.getPricesBy(date, productId, brandId);
 
         // Then
-        assertTrue(result.isEmpty());
+        StepVerifier.create(result)
+                .expectComplete();
     }
-
 }

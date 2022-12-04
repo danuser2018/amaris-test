@@ -11,9 +11,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static me.dserrano.inditex.prices.domain.model.PriceMother.PRICE_1;
 import static me.dserrano.inditex.prices.infrastructure.inbound.rest.model.PricesResponseMother.PRICES_RESPONSE_1;
@@ -43,24 +43,25 @@ public class PricesControllerTest {
     @DisplayName("Given a valid request that produces a result then return an Ok response with a price")
     public void validRequestReturnsOKAndPrice() {
         // Given
-        when(pricesService.getPricesBy(date, productId, brandId)).thenReturn(Optional.of(PRICE_1));
-        when(priceMapper.toPricesResponse(PRICE_1)).thenReturn(PRICES_RESPONSE_1);
+        when(pricesService.getPricesBy(date, productId, brandId)).thenReturn(Mono.just(PRICE_1));
 
         // When
         Mono<ResponseEntity<PricesResponse>> result = classToTest.getPrices(date, productId, brandId);
 
         // Then
-        result.subscribe(response -> {
-                assertEquals(OK, response.getStatusCode());
-                assertEquals(PRICES_RESPONSE_1, response.getBody());
-        });
+        StepVerifier.create(result)
+                .assertNext(response -> {
+                    assertEquals(OK, response.getStatusCode());
+                    assertEquals(PRICES_RESPONSE_1, response.getBody());
+                })
+                .expectComplete();
     }
 
     @Test
     @DisplayName("Given a valid request then domain is invoke")
     public void validRequestInvokeDomain() {
         // Given
-        when(pricesService.getPricesBy(date, productId, brandId)).thenReturn(Optional.of(PRICE_1));
+        when(pricesService.getPricesBy(date, productId, brandId)).thenReturn(Mono.just(PRICE_1));
 
         // When
         classToTest.getPrices(date, productId, brandId);
@@ -73,15 +74,16 @@ public class PricesControllerTest {
     @DisplayName("Given a valid request that produces no price then return an empty Ok response")
     public void validRequestReturnsNoPrice() {
         // Given
-        when(pricesService.getPricesBy(date, productId, brandId)).thenReturn(Optional.empty());
+        when(pricesService.getPricesBy(date, productId, brandId)).thenReturn(Mono.empty());
 
         // When
         Mono<ResponseEntity<PricesResponse>> result = classToTest.getPrices(date, productId, brandId);
 
         // Then
-        result.subscribe(response -> {
-            assertEquals(NO_CONTENT, response.getStatusCode());
-            assertNull(response.getBody());
-        });
+        StepVerifier.create(result)
+                .assertNext(response -> {
+                    assertEquals(NO_CONTENT, response.getStatusCode());
+                    assertNull(response.getBody());
+                });
     }
 }
