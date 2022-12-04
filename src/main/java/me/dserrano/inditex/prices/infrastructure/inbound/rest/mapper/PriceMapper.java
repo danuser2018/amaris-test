@@ -2,11 +2,11 @@ package me.dserrano.inditex.prices.infrastructure.inbound.rest.mapper;
 
 import me.dserrano.inditex.prices.domain.model.Price;
 import me.dserrano.inditex.prices.infrastructure.inbound.rest.model.PricesResponse;
-import org.jetbrains.annotations.NotNull;
+import org.mapstruct.Mapper;
 
+@Mapper(componentModel = "spring")
 public interface PriceMapper {
 
-    @NotNull
-    PricesResponse toPricesResponse(@NotNull Price price);
+    PricesResponse toPricesResponse(Price price);
 
 }

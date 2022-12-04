@@ -11,7 +11,7 @@ public class PricesResponseMother {
             .priceList("1")
             .startDate(LocalDateTime.of(2020, 6, 14, 0, 0, 0))
             .endDate(LocalDateTime.of(2020, 12, 31, 23, 59, 59))
-            .price(new BigDecimal("35.50"))
+            .value(new BigDecimal("35.50"))
             .currency("EUR")
             .build();
 }

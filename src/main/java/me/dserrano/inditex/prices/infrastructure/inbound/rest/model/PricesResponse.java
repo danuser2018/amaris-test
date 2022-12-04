@@ -16,7 +16,7 @@ public class PricesResponse {
     @JsonProperty("price-list") String priceList;
     @JsonProperty("start-date") LocalDateTime startDate;
     @JsonProperty("end-date") LocalDateTime endDate;
-    @JsonProperty("price") BigDecimal price;
+    @JsonProperty("price") BigDecimal value;
     @JsonProperty("currency") String currency;
 
 }
