@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -46,11 +47,13 @@ public class PricesControllerTest {
         when(priceMapper.toPricesResponse(PRICE_1)).thenReturn(PRICES_RESPONSE_1);
 
         // When
-        ResponseEntity<PricesResponse> result = classToTest.getPrices(date, productId, brandId);
+        Mono<ResponseEntity<PricesResponse>> result = classToTest.getPrices(date, productId, brandId);
 
         // Then
-        assertEquals(OK, result.getStatusCode());
-        assertEquals(PRICES_RESPONSE_1, result.getBody());
+        result.subscribe(response -> {
+                assertEquals(OK, response.getStatusCode());
+                assertEquals(PRICES_RESPONSE_1, response.getBody());
+        });
     }
 
     @Test
@@ -58,7 +61,6 @@ public class PricesControllerTest {
     public void validRequestInvokeDomain() {
         // Given
         when(pricesService.getPricesBy(date, productId, brandId)).thenReturn(Optional.of(PRICE_1));
-        when(priceMapper.toPricesResponse(PRICE_1)).thenReturn(PRICES_RESPONSE_1);
 
         // When
         classToTest.getPrices(date, productId, brandId);
@@ -74,11 +76,12 @@ public class PricesControllerTest {
         when(pricesService.getPricesBy(date, productId, brandId)).thenReturn(Optional.empty());
 
         // When
-        ResponseEntity<PricesResponse> result = classToTest.getPrices(date, productId, brandId);
+        Mono<ResponseEntity<PricesResponse>> result = classToTest.getPrices(date, productId, brandId);
 
         // Then
-        assertEquals(NO_CONTENT, result.getStatusCode());
-        assertNull(result.getBody());
+        result.subscribe(response -> {
+            assertEquals(NO_CONTENT, response.getStatusCode());
+            assertNull(response.getBody());
+        });
     }
-
 }

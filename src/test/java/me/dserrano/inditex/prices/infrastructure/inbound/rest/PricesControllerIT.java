@@ -9,21 +9,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-@WebMvcTest(PricesController.class)
+@WebFluxTest(PricesController.class)
 @ExtendWith(MockitoExtension.class)
 public class PricesControllerIT {
 
@@ -34,7 +29,7 @@ public class PricesControllerIT {
     private PriceMapper priceMapper;
 
     @Autowired
-    private MockMvc mockMvc;
+    private WebTestClient webTestClient;
 
     @Test
     @DisplayName("Given a valid date, product-id and brand-id that results in a price, then a 200 response is received with the price in the body")
@@ -47,18 +42,25 @@ public class PricesControllerIT {
         when(pricesService.getPricesBy(date, productId, brandId)).thenReturn(Optional.of(PriceMother.PRICE_1));
         when(priceMapper.toPricesResponse(PriceMother.PRICE_1)).thenReturn(PricesResponseMother.PRICES_RESPONSE_1);
 
-        mockMvc.perform(get("/prices")
+        webTestClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/prices")
                         .queryParam("date", date.toString())
                         .queryParam("product-id", productId)
-                        .queryParam("brand-id", brandId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.product-id", is("35455")))
-                .andExpect(jsonPath("$.brand-id", is("1")))
-                .andExpect(jsonPath("$.price-list", is("1")))
-                .andExpect(jsonPath("$.start-date", is("2020-06-14T00:00:00")))
-                .andExpect(jsonPath("$.end-date", is("2020-12-31T23:59:59")))
-                .andExpect(jsonPath("$.price", is(35.5)))
-                .andExpect(jsonPath("$.currency", is("EUR")));
+                        .queryParam("brand-id", brandId)
+                        .build()
+                )
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.product-id").isEqualTo("35455")
+                .jsonPath("$.brand-id").isEqualTo("1")
+                .jsonPath("$.price-list").isEqualTo("1")
+                .jsonPath("$.start-date").isEqualTo("2020-06-14T00:00:00")
+                .jsonPath("$.end-date").isEqualTo("2020-12-31T23:59:59")
+                .jsonPath("$.price").isEqualTo(35.5)
+                .jsonPath("$.currency").isEqualTo("EUR");
     }
 
     @Test
@@ -69,58 +71,93 @@ public class PricesControllerIT {
         String productId = "35455";
         String brandId = "1";
 
-        mockMvc.perform(get("/prices")
+        webTestClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/prices")
                         .queryParam("date", date.toString())
                         .queryParam("product-id", productId)
-                        .queryParam("brand-id", brandId))
-                .andExpect(status().isNoContent());
+                        .queryParam("brand-id", brandId)
+                        .build()
+                )
+                .exchange()
+                .expectStatus().isNoContent();
     }
 
     @Test
     @DisplayName("Given something that is not a date, then a 400 response is received")
     public void somethingThatIsNotADateReturnsKo() throws Exception {
-        mockMvc.perform(get("/prices")
+        webTestClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/prices")
                         .queryParam("date", "An invalid date")
                         .queryParam("product-id", "35455")
-                        .queryParam("brand-id", "1"))
-                .andExpect(status().isBadRequest());
+                        .queryParam("brand-id", "1")
+                        .build()
+                )
+                .exchange()
+                .expectStatus().isBadRequest();
     }
 
     @Test
     @DisplayName("Given a date with an invalid format, then a 400 response is received")
     public void invalidDateReturnsKo() throws Exception {
-        mockMvc.perform(get("/prices")
+        webTestClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/prices")
                         .queryParam("date", "2020/06/14T10:00:00")
                         .queryParam("product-id", "35455")
-                        .queryParam("brand-id", "1"))
-                .andExpect(status().isBadRequest());
+                        .queryParam("brand-id", "1")
+                        .build()
+                )
+                .exchange()
+                .expectStatus().isBadRequest();
     }
 
     @Test
     @DisplayName("Given a request without date, then a 400 response is received")
     public void withoutDateReturnsKo() throws Exception {
-        mockMvc.perform(get("/prices")
+        webTestClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/prices")
                         .queryParam("product-id", "35455")
-                        .queryParam("brand-id", "1"))
-                .andExpect(status().isBadRequest());
+                        .queryParam("brand-id", "1")
+                        .build()
+                )
+                .exchange()
+                .expectStatus().isBadRequest();
     }
 
     @Test
     @DisplayName("Given a request without product-id, then a 400 response is received")
     public void withoutPriceIdReturnsKo() throws Exception {
-        mockMvc.perform(get("/prices")
+        webTestClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/prices")
                         .queryParam("date", "2020-06-14T10:00:00")
-                        .queryParam("brand-id", "1"))
-                .andExpect(status().isBadRequest());
+                        .queryParam("brand-id", "1")
+                        .build()
+                )
+                .exchange()
+                .expectStatus().isBadRequest();
     }
 
     @Test
     @DisplayName("Given a request without brand-id, then a 400 response is received")
     public void withoutBrandIdReturnsKo() throws Exception {
-        mockMvc.perform(get("/prices")
+        webTestClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/prices")
                         .queryParam("date", "2020-06-14T10:00:00")
-                        .queryParam("product-id", "35455"))
-                .andExpect(status().isBadRequest());
+                        .queryParam("product-id", "35455")
+                        .build()
+                )
+                .exchange()
+                .expectStatus().isBadRequest();
     }
-
 }
