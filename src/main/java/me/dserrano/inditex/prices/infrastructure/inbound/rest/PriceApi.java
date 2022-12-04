@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import me.dserrano.inditex.prices.infrastructure.inbound.rest.model.PricesResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 
@@ -35,7 +36,7 @@ public interface PriceApi {
                     content = @Content
             )
     })
-    ResponseEntity<PricesResponse> getPrices(
+    Mono<ResponseEntity<PricesResponse>> getPrices(
             @Parameter(
                     description = "Price's application date in ISO 8601 format",
                     required = true,
