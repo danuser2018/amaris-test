@@ -1,6 +1,6 @@
 package me.dserrano.inditex.prices.infrastructure.inbound.rest;
 
-import me.dserrano.inditex.prices.domain.ports.primary.GetPricePort;
+import me.dserrano.inditex.prices.domain.ports.primary.PricesService;
 import me.dserrano.inditex.prices.infrastructure.inbound.rest.mapper.PriceMapper;
 import me.dserrano.inditex.prices.infrastructure.inbound.rest.model.PricesResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +26,7 @@ import static org.springframework.http.HttpStatus.OK;
 @ExtendWith(MockitoExtension.class)
 public class PricesControllerTest {
     @Mock
-    private GetPricePort getPricePort;
+    private PricesService pricesService;
 
     @Mock
     private PriceMapper priceMapper;
@@ -42,7 +42,7 @@ public class PricesControllerTest {
     @DisplayName("Given a valid request that produces a result then return an Ok response with a price")
     public void validRequestReturnsOKAndPrice() {
         // Given
-        when(getPricePort.get(date, productId, brandId)).thenReturn(Optional.of(PRICE_1));
+        when(pricesService.getPricesBy(date, productId, brandId)).thenReturn(Optional.of(PRICE_1));
         when(priceMapper.toPricesResponse(PRICE_1)).thenReturn(PRICES_RESPONSE_1);
 
         // When
@@ -57,21 +57,21 @@ public class PricesControllerTest {
     @DisplayName("Given a valid request then domain is invoke")
     public void validRequestInvokeDomain() {
         // Given
-        when(getPricePort.get(date, productId, brandId)).thenReturn(Optional.of(PRICE_1));
+        when(pricesService.getPricesBy(date, productId, brandId)).thenReturn(Optional.of(PRICE_1));
         when(priceMapper.toPricesResponse(PRICE_1)).thenReturn(PRICES_RESPONSE_1);
 
         // When
         classToTest.getPrices(date, productId, brandId);
 
         // Then
-        verify(getPricePort).get(date, productId, brandId);
+        verify(pricesService).getPricesBy(date, productId, brandId);
     }
 
     @Test
     @DisplayName("Given a valid request that produces no price then return an empty Ok response")
     public void validRequestReturnsNoPrice() {
         // Given
-        when(getPricePort.get(date, productId, brandId)).thenReturn(Optional.empty());
+        when(pricesService.getPricesBy(date, productId, brandId)).thenReturn(Optional.empty());
 
         // When
         ResponseEntity<PricesResponse> result = classToTest.getPrices(date, productId, brandId);

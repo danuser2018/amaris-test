@@ -6,9 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-public interface GetPricePort {
-
+public interface PricesService {
     @NotNull
-    Optional<Price> get(@NotNull LocalDateTime date, @NotNull String productId, @NotNull String brandId);
-
+    Optional<Price> getPricesBy(@NotNull LocalDateTime date, @NotNull String productId, @NotNull String brandId);
 }

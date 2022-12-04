@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,10 +13,10 @@ import static me.dserrano.inditex.prices.infrastructure.outbound.h2.model.PriceE
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
-public class PricesRepositoryIT {
+public class PriceEntityRepositoryIT {
 
     @Autowired
-    private PricesRepository pricesRepository;
+    private PriceEntityRepository priceEntityRepository;
 
     @Test
     @DisplayName("Petición a las 10:00 del día 14 del producto 35455 para la brand 1 (ZARA)")
@@ -28,7 +27,7 @@ public class PricesRepositoryIT {
         String brandId = "1";
 
         // When
-        List<PriceEntity> result = pricesRepository.getPricesBy(date, productId, brandId);
+        List<PriceEntity> result = priceEntityRepository.getPricesBy(date, productId, brandId);
 
         // Then
         assertEquals(1, result.size());
@@ -44,7 +43,7 @@ public class PricesRepositoryIT {
         String brandId = "1";
 
         // When
-        List<PriceEntity> result = pricesRepository.getPricesBy(date, productId, brandId);
+        List<PriceEntity> result = priceEntityRepository.getPricesBy(date, productId, brandId);
 
         // Then
         assertEquals(2, result.size());
@@ -61,7 +60,7 @@ public class PricesRepositoryIT {
         String brandId = "1";
 
         // When
-        List<PriceEntity> result = pricesRepository.getPricesBy(date, productId, brandId);
+        List<PriceEntity> result = priceEntityRepository.getPricesBy(date, productId, brandId);
 
         // Then
         assertEquals(1, result.size());
@@ -77,7 +76,7 @@ public class PricesRepositoryIT {
         String brandId = "1";
 
         // When
-        List<PriceEntity> result = pricesRepository.getPricesBy(date, productId, brandId);
+        List<PriceEntity> result = priceEntityRepository.getPricesBy(date, productId, brandId);
 
         // Then
         assertEquals(2, result.size());
@@ -94,7 +93,7 @@ public class PricesRepositoryIT {
         String brandId = "1";
 
         // When
-        List<PriceEntity> result = pricesRepository.getPricesBy(date, productId, brandId);
+        List<PriceEntity> result = priceEntityRepository.getPricesBy(date, productId, brandId);
 
         // Then
         assertEquals(2, result.size());
