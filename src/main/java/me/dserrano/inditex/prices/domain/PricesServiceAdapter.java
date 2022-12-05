@@ -6,10 +6,12 @@ import me.dserrano.inditex.prices.domain.ports.secondary.PricesDao;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.math.MathFlux;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
-import java.util.Optional;
 
 @Service
 public class PricesServiceAdapter implements PricesService {
@@ -23,10 +25,9 @@ public class PricesServiceAdapter implements PricesService {
 
     @Override
     @NotNull
-    public Optional<Price> getPricesBy(@NotNull LocalDateTime date, @NotNull String productId, @NotNull String brandId) {
-
-        return pricesDao.getPricesBy(date, productId, brandId)
-                .stream()
-                .max(Comparator.comparingInt(Price::getPriority));
+    public Mono<Price> getPricesBy(@NotNull LocalDateTime date, @NotNull String productId, @NotNull String brandId) {
+        return MathFlux.max(
+                Flux.fromIterable(pricesDao.getPricesBy(date, productId, brandId)),
+                Comparator.comparingInt(Price::getPriority));
     }
 }

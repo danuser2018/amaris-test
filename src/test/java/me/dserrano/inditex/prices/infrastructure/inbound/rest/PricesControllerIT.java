@@ -12,9 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 
@@ -39,7 +39,7 @@ public class PricesControllerIT {
         String productId = "35455";
         String brandId = "1";
 
-        when(pricesService.getPricesBy(date, productId, brandId)).thenReturn(Optional.of(PriceMother.PRICE_1));
+        when(pricesService.getPricesBy(date, productId, brandId)).thenReturn(Mono.just(PriceMother.PRICE_1));
         when(priceMapper.toPricesResponse(PriceMother.PRICE_1)).thenReturn(PricesResponseMother.PRICES_RESPONSE_1);
 
         webTestClient
@@ -70,6 +70,8 @@ public class PricesControllerIT {
         LocalDateTime date = LocalDateTime.of(2020, 6, 14, 10, 0, 0);
         String productId = "35455";
         String brandId = "1";
+
+        when(pricesService.getPricesBy(date, productId, brandId)).thenReturn(Mono.empty());
 
         webTestClient
                 .get()

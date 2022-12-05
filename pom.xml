@@ -15,11 +15,13 @@
 
     <properties>
         <java.version>11</java.version>
+        <webflux.version>3.0.0</webflux.version>
         <lombok.version>1.18.24</lombok.version>
         <mapstruct.version>1.5.3.Final</mapstruct.version>
         <jetbrains.annotations.version>23.0.0</jetbrains.annotations.version>
         <springdoc-openapi-ui>1.6.13</springdoc-openapi-ui>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+        <reactor.version>3.5.0</reactor.version>
         <jacoco.version>0.8.7</jacoco.version>
     </properties>
 
@@ -31,7 +33,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
-            <version>3.0.0</version>
+            <version>${webflux.version}</version>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
@@ -43,11 +45,6 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
@@ -64,6 +61,22 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.projectreactor.addons</groupId>
+            <artifactId>reactor-extra</artifactId>
+            <version>${reactor.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-test</artifactId>
+            <scope>test</scope>
+            <version>${reactor.version}</version>
         </dependency>
     </dependencies>
 

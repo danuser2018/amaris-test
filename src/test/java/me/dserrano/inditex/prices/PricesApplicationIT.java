@@ -18,7 +18,7 @@ class PricesApplicationIT {
 
     @Test
     @DisplayName("Petición a las 10:00 del día 14 del producto 35455 para la brand 1 (ZARA)")
-    void test1() throws Exception {
+    void test1() {
         webTestClient.
                 get()
                 .uri(uriBuilder -> uriBuilder
@@ -44,7 +44,7 @@ class PricesApplicationIT {
 
     @Test
     @DisplayName("Petición a las 16:00 del día 14 del producto 35455 para la brand 1 (ZARA)")
-    void test2() throws Exception {
+    void test2() {
         webTestClient.
                 get()
                 .uri(uriBuilder -> uriBuilder
@@ -70,7 +70,7 @@ class PricesApplicationIT {
 
     @Test
     @DisplayName("Petición a las 21:00 del día 14 del producto 35455 para la brand 1 (ZARA)")
-    void test3() throws Exception {
+    void test3() {
         webTestClient.
                 get()
                 .uri(uriBuilder -> uriBuilder
@@ -96,7 +96,7 @@ class PricesApplicationIT {
 
     @Test
     @DisplayName("Petición a las 10:00 del día 15 del producto 35455 para la brand 1 (ZARA)")
-    void test4() throws Exception {
+    void test4() {
         webTestClient.
                 get()
                 .uri(uriBuilder -> uriBuilder
@@ -122,7 +122,7 @@ class PricesApplicationIT {
 
     @Test
     @DisplayName("Petición a las 21:00 del día 16 del producto 35455 para la brand 1 (ZARA)")
-    void test5() throws Exception {
+    void test5() {
         webTestClient.
                 get()
                 .uri(uriBuilder -> uriBuilder
@@ -148,7 +148,7 @@ class PricesApplicationIT {
 
     @Test
     @DisplayName("Petición a las 21:00 del día 16/06/2021 del producto 35455 para la brand 1 (ZARA)")
-    void testEmptyResult() throws Exception {
+    void testEmptyResult() {
         webTestClient.
                 get()
                 .uri(uriBuilder -> uriBuilder
