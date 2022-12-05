@@ -21,7 +21,7 @@
         <jetbrains.annotations.version>23.0.0</jetbrains.annotations.version>
         <springdoc-openapi-ui>1.6.13</springdoc-openapi-ui>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
-        <reactor-test.version>3.5.0</reactor-test.version>
+        <reactor.version>3.5.0</reactor.version>
         <jacoco.version>0.8.7</jacoco.version>
     </properties>
 
@@ -68,10 +68,15 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>io.projectreactor.addons</groupId>
+            <artifactId>reactor-extra</artifactId>
+            <version>${reactor.version}</version>
+        </dependency>
+        <dependency>
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-test</artifactId>
             <scope>test</scope>
-            <version>${reactor-test.version}</version>
+            <version>${reactor.version}</version>
         </dependency>
     </dependencies>
 

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.math.MathFlux;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -25,7 +26,8 @@ public class PricesServiceAdapter implements PricesService {
     @Override
     @NotNull
     public Mono<Price> getPricesBy(@NotNull LocalDateTime date, @NotNull String productId, @NotNull String brandId) {
-        return Flux.fromIterable(pricesDao.getPricesBy(date, productId, brandId))
-                .reduce((p1, p2) -> Comparator.comparingInt(Price::getPriority).compare(p1, p2) <= 0 ? p1 : p2);
+        return MathFlux.max(
+                Flux.fromIterable(pricesDao.getPricesBy(date, productId, brandId)),
+                Comparator.comparingInt(Price::getPriority));
     }
 }
