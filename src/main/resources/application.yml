@@ -5,6 +5,8 @@ spring:
     username: sa
     password: password
     initialization-mode: always
+    hikari:
+      maximum-pool-size: 10
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate.ddl-auto: update
