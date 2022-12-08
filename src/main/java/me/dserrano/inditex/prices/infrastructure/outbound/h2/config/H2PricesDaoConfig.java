@@ -8,7 +8,7 @@ import org.springframework.r2dbc.connection.init.ConnectionFactoryInitializer;
 import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator;
 
 @Configuration
-public class PricesDaoAdapterConfig {
+public class H2PricesDaoConfig {
     @Bean
     public ResourceDatabasePopulator databasePopulator() {
         return new ResourceDatabasePopulator(new ClassPathResource("data.sql"));

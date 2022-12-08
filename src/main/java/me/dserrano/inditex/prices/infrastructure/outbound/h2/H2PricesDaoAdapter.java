@@ -12,13 +12,13 @@ import reactor.core.publisher.Flux;
 import java.time.LocalDateTime;
 
 @Component
-public class PricesDaoAdapter implements PricesDao {
+public class H2PricesDaoAdapter implements PricesDao {
 
     private final PriceEntityRepository priceEntityRepository;
     private final PriceEntityMapper priceEntityMapper;
 
     @Autowired
-    public PricesDaoAdapter(
+    public H2PricesDaoAdapter(
             PriceEntityRepository priceEntityRepository,
             PriceEntityMapper priceEntityMapper
     ) {
