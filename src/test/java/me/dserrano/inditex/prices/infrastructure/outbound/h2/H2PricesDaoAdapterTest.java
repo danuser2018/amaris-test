@@ -23,7 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class PriceDaoAdapterTest {
+public class H2PricesDaoAdapterTest {
 
     @Mock
     private PriceEntityRepository priceEntityRepository;
@@ -32,7 +32,7 @@ public class PriceDaoAdapterTest {
     private PriceEntityMapper priceEntityMapper;
 
     @InjectMocks
-    private PricesDaoAdapter classToTest;
+    private H2PricesDaoAdapter pricesDaoAdapter;
 
     private final LocalDateTime date = LocalDateTime.of(2020, 6, 14, 10, 0, 0);
     private final String productId = "35455";
@@ -46,7 +46,7 @@ public class PriceDaoAdapterTest {
         when(priceEntityMapper.toPrice(PRICE_ENTITY_1)).thenReturn(PRICE_1);
 
         // When
-        Flux<Price> result = classToTest.getPricesBy(date, productId, brandId);
+        Flux<Price> result = pricesDaoAdapter.getPricesBy(date, productId, brandId);
 
         // Then
         StepVerifier.create(result)
@@ -63,7 +63,7 @@ public class PriceDaoAdapterTest {
         when(priceEntityMapper.toPrice(PRICE_ENTITY_1)).thenReturn(PRICE_1);
 
         // When
-        Flux<Price> result = classToTest.getPricesBy(date, productId, brandId);
+        Flux<Price> result = pricesDaoAdapter.getPricesBy(date, productId, brandId);
 
         // Then
         StepVerifier.create(result)
@@ -85,7 +85,7 @@ public class PriceDaoAdapterTest {
         when(priceEntityMapper.toPrice(PRICE_ENTITY_2)).thenReturn(PRICE_2);
 
         // When
-        Flux<Price> result = classToTest.getPricesBy(date, productId, brandId);
+        Flux<Price> result = pricesDaoAdapter.getPricesBy(date, productId, brandId);
 
         // Then
         StepVerifier.create(result)
@@ -102,7 +102,7 @@ public class PriceDaoAdapterTest {
         when(priceEntityRepository.getPricesBy(date, productId, brandId)).thenReturn(Flux.empty());
 
         // When
-        Flux<Price> result = classToTest.getPricesBy(date, productId, brandId);
+        Flux<Price> result = pricesDaoAdapter.getPricesBy(date, productId, brandId);
 
         // Then
         StepVerifier.create(result)
