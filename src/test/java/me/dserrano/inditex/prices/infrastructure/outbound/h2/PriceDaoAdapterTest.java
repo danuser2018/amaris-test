@@ -3,13 +3,15 @@ package me.dserrano.inditex.prices.infrastructure.outbound.h2;
 import me.dserrano.inditex.prices.domain.model.Price;
 import me.dserrano.inditex.prices.infrastructure.outbound.h2.mapper.PriceEntityMapper;
 import me.dserrano.inditex.prices.infrastructure.outbound.h2.repository.PriceEntityRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
@@ -31,12 +33,18 @@ public class PriceDaoAdapterTest {
     @Mock
     private PriceEntityMapper priceEntityMapper;
 
-    @InjectMocks
+    private final Scheduler jdbcScheduler = Schedulers.immediate();
+
     private PricesDaoAdapter classToTest;
 
     private final LocalDateTime date = LocalDateTime.of(2020, 6, 14, 10, 0, 0);
     private final String productId = "35455";
     private final String brandId = "1";
+
+    @BeforeEach
+    public void setUp() {
+        classToTest = new PricesDaoAdapter(priceEntityRepository, priceEntityMapper, jdbcScheduler);
+    }
 
     @Test
     @DisplayName("Given a date, productId and brandId that produces a result then a Price is returned")
