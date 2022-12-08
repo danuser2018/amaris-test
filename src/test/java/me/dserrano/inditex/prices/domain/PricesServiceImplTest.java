@@ -13,6 +13,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 import static me.dserrano.inditex.prices.domain.model.PriceMother.PRICE_1;
@@ -21,12 +22,15 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class PricesServiceAdapterTest {
+public class PricesServiceImplTest {
     @Mock
     private PricesDao pricesDao;
 
+    @Mock
+    private Comparator<Price> priorityComparator;
+
     @InjectMocks
-    private PricesServiceAdapter classToTest;
+    private PricesServiceImpl pricesService;
 
     private final LocalDateTime date = LocalDateTime.of(2020, 6, 14, 10, 0, 0);
     private final String productId = "35455";
@@ -39,7 +43,7 @@ public class PricesServiceAdapterTest {
         when(pricesDao.getPricesBy(date, productId, brandId)).thenReturn(Flux.just(PRICE_1));
 
         // When
-        Mono<Price> result = classToTest.getPricesBy(date, productId, brandId);
+        Mono<Price> result = pricesService.getPricesBy(date, productId, brandId);
 
         // Then
         StepVerifier.create(result)
@@ -55,7 +59,7 @@ public class PricesServiceAdapterTest {
         when(pricesDao.getPricesBy(date, productId, brandId)).thenReturn(Flux.just(PRICE_1));
 
         // When
-        Mono<Price> result = classToTest.getPricesBy(date, productId, brandId);
+        pricesService.getPricesBy(date, productId, brandId);
 
         // Then
         verify(pricesDao).getPricesBy(date, productId, brandId);
@@ -66,9 +70,10 @@ public class PricesServiceAdapterTest {
     public void validRequestForTwoPricesReturnsTheOneWithMostPriority() {
         // Given
         when(pricesDao.getPricesBy(date, productId, brandId)).thenReturn(Flux.fromIterable(List.of(PRICE_1, PRICE_2)));
+        when(priorityComparator.compare(PRICE_2, PRICE_1)).thenReturn(1);
 
         // When
-        Mono<Price> result = classToTest.getPricesBy(date, productId, brandId);
+        Mono<Price> result = pricesService.getPricesBy(date, productId, brandId);
 
         // Then
         StepVerifier.create(result)
@@ -84,7 +89,7 @@ public class PricesServiceAdapterTest {
         when(pricesDao.getPricesBy(date, productId, brandId)).thenReturn(Flux.empty());
 
         // When
-        Mono<Price> result = classToTest.getPricesBy(date, productId, brandId);
+        Mono<Price> result = pricesService.getPricesBy(date, productId, brandId);
 
         // Then
         StepVerifier.create(result)

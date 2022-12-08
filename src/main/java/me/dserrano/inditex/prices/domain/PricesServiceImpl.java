@@ -13,21 +13,21 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 
 @Service
-public class PricesServiceAdapter implements PricesService {
+public class PricesServiceImpl implements PricesService {
 
     private final PricesDao pricesDao;
+    private final Comparator<Price> priorityComparator;
 
     @Autowired
-    public PricesServiceAdapter(PricesDao pricesDao) {
+    public PricesServiceImpl(PricesDao pricesDao, Comparator<Price> priorityComparator) {
         this.pricesDao = pricesDao;
+        this.priorityComparator = priorityComparator;
+
     }
 
     @Override
     @NotNull
     public Mono<Price> getPricesBy(@NotNull LocalDateTime date, @NotNull String productId, @NotNull String brandId) {
-        return MathFlux.max(
-                pricesDao.getPricesBy(date, productId, brandId),
-                Comparator.comparingInt(Price::getPriority)
-        );
+        return MathFlux.max(pricesDao.getPricesBy(date, productId, brandId), priorityComparator);
     }
 }
