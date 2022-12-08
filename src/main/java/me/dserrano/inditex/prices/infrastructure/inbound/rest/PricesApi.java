@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 
-public interface PriceApi {
+public interface PricesApi {
     @Operation(summary = "Find a price by date, product-id and brand-id")
     @ApiResponses(value = {
             @ApiResponse(

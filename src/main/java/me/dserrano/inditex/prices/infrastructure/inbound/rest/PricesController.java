@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 
 
 @RestController
-public class PricesController implements PriceApi {
+public class PricesController implements PricesApi {
 
     private final PricesService pricesService;
     private final PriceMapper priceMapper;
