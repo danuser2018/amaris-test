@@ -1,11 +1,10 @@
 package me.dserrano.inditex.prices.infrastructure.outbound.h2.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -13,35 +12,41 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
-@Table(name = "PRICES")
+@Table("PRICES")
 public class PriceEntity {
     @Id
-    @Column(name = "PRICE_ID")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column("PRICE_ID")
     private Long id;
 
-    @Column(name = "PRODUCT_ID", nullable = false)
+    @Column("PRODUCT_ID")
+    @NonNull
     private String productId;
 
-    @Column(name = "BRAND_ID", nullable = false)
+    @Column("BRAND_ID")
+    @NonNull
     private String brandId;
 
-    @Column(name = "PRICE_LIST", nullable = false)
+    @Column("PRICE_LIST")
+    @NonNull
     private String priceList;
 
-    @Column(name = "START_DATE", nullable = false)
+    @Column("START_DATE")
+    @NonNull
     private LocalDateTime startDate;
 
-    @Column(name = "END_DATE", nullable = false)
+    @Column("END_DATE")
+    @NonNull
     private LocalDateTime endDate;
 
-    @Column(name = "PRICE", nullable = false)
+    @Column("PRICE")
+    @NonNull
     private BigDecimal value;
 
-    @Column(name = "CURR", nullable = false)
+    @Column("CURR")
+    @NonNull
     private String currency;
 
-    @Column(name = "PRIORITY", nullable = false)
+    @Column("PRIORITY")
+    @NonNull
     private Integer priority;
 }
