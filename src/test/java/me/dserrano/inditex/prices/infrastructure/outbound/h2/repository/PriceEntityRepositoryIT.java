@@ -4,15 +4,15 @@ import me.dserrano.inditex.prices.infrastructure.outbound.h2.model.PriceEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest;
+import reactor.core.publisher.Flux;
+import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static me.dserrano.inditex.prices.infrastructure.outbound.h2.model.PriceEntityMother.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DataJpaTest
+@DataR2dbcTest
 public class PriceEntityRepositoryIT {
 
     @Autowired
@@ -27,11 +27,13 @@ public class PriceEntityRepositoryIT {
         String brandId = "1";
 
         // When
-        List<PriceEntity> result = priceEntityRepository.getPricesBy(date, productId, brandId);
+        Flux<PriceEntity> result = priceEntityRepository.getPricesBy(date, productId, brandId);
 
         // Then
-        assertEquals(1, result.size());
-        assertEquals(PRICE_ENTITY_1, result.get(0));
+        StepVerifier.create(result)
+                .expectNext(PRICE_ENTITY_1)
+                .expectComplete()
+                .verify();
     }
 
     @Test
@@ -43,12 +45,14 @@ public class PriceEntityRepositoryIT {
         String brandId = "1";
 
         // When
-        List<PriceEntity> result = priceEntityRepository.getPricesBy(date, productId, brandId);
+        Flux<PriceEntity> result = priceEntityRepository.getPricesBy(date, productId, brandId);
 
         // Then
-        assertEquals(2, result.size());
-        assertEquals(PRICE_ENTITY_1, result.get(0));
-        assertEquals(PRICE_ENTITY_2, result.get(1));
+        StepVerifier.create(result)
+                .expectNext(PRICE_ENTITY_1)
+                .expectNext(PRICE_ENTITY_2)
+                .expectComplete()
+                .verify();
     }
 
     @Test
@@ -60,11 +64,13 @@ public class PriceEntityRepositoryIT {
         String brandId = "1";
 
         // When
-        List<PriceEntity> result = priceEntityRepository.getPricesBy(date, productId, brandId);
+        Flux<PriceEntity> result = priceEntityRepository.getPricesBy(date, productId, brandId);
 
         // Then
-        assertEquals(1, result.size());
-        assertEquals(PRICE_ENTITY_1, result.get(0));
+        StepVerifier.create(result)
+                .expectNext(PRICE_ENTITY_1)
+                .expectComplete()
+                .verify();
     }
 
     @Test
@@ -76,12 +82,14 @@ public class PriceEntityRepositoryIT {
         String brandId = "1";
 
         // When
-        List<PriceEntity> result = priceEntityRepository.getPricesBy(date, productId, brandId);
+        Flux<PriceEntity> result = priceEntityRepository.getPricesBy(date, productId, brandId);
 
         // Then
-        assertEquals(2, result.size());
-        assertEquals(PRICE_ENTITY_1, result.get(0));
-        assertEquals(PRICE_ENTITY_3, result.get(1));
+        StepVerifier.create(result)
+                .expectNext(PRICE_ENTITY_1)
+                .expectNext(PRICE_ENTITY_3)
+                .expectComplete()
+                .verify();
     }
 
     @Test
@@ -93,11 +101,13 @@ public class PriceEntityRepositoryIT {
         String brandId = "1";
 
         // When
-        List<PriceEntity> result = priceEntityRepository.getPricesBy(date, productId, brandId);
+        Flux<PriceEntity> result = priceEntityRepository.getPricesBy(date, productId, brandId);
 
         // Then
-        assertEquals(2, result.size());
-        assertEquals(PRICE_ENTITY_1, result.get(0));
-        assertEquals(PRICE_ENTITY_4, result.get(1));
+        StepVerifier.create(result)
+                .expectNext(PRICE_ENTITY_1)
+                .expectNext(PRICE_ENTITY_4)
+                .expectComplete()
+                .verify();
     }
 }

@@ -3,15 +3,13 @@ package me.dserrano.inditex.prices.infrastructure.outbound.h2;
 import me.dserrano.inditex.prices.domain.model.Price;
 import me.dserrano.inditex.prices.infrastructure.outbound.h2.mapper.PriceEntityMapper;
 import me.dserrano.inditex.prices.infrastructure.outbound.h2.repository.PriceEntityRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
-import reactor.core.scheduler.Scheduler;
-import reactor.core.scheduler.Schedulers;
 import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
@@ -33,24 +31,18 @@ public class PriceDaoAdapterTest {
     @Mock
     private PriceEntityMapper priceEntityMapper;
 
-    private final Scheduler jdbcScheduler = Schedulers.immediate();
-
+    @InjectMocks
     private PricesDaoAdapter classToTest;
 
     private final LocalDateTime date = LocalDateTime.of(2020, 6, 14, 10, 0, 0);
     private final String productId = "35455";
     private final String brandId = "1";
 
-    @BeforeEach
-    public void setUp() {
-        classToTest = new PricesDaoAdapter(priceEntityRepository, priceEntityMapper, jdbcScheduler);
-    }
-
     @Test
     @DisplayName("Given a date, productId and brandId that produces a result then a Price is returned")
     public void validParametersReturnsAPrice() {
         // Given
-        when(priceEntityRepository.getPricesBy(date, productId, brandId)).thenReturn(List.of(PRICE_ENTITY_1));
+        when(priceEntityRepository.getPricesBy(date, productId, brandId)).thenReturn(Flux.just(PRICE_ENTITY_1));
         when(priceEntityMapper.toPrice(PRICE_ENTITY_1)).thenReturn(PRICE_1);
 
         // When
@@ -67,7 +59,7 @@ public class PriceDaoAdapterTest {
     @DisplayName("Given a date, productId and brandId then repository is invoked")
     public void validParametersInvokeRepository() {
         // Given
-        when(priceEntityRepository.getPricesBy(date, productId, brandId)).thenReturn(List.of(PRICE_ENTITY_1));
+        when(priceEntityRepository.getPricesBy(date, productId, brandId)).thenReturn(Flux.just(PRICE_ENTITY_1));
         when(priceEntityMapper.toPrice(PRICE_ENTITY_1)).thenReturn(PRICE_1);
 
         // When
@@ -87,7 +79,8 @@ public class PriceDaoAdapterTest {
     @DisplayName("Given a date, productId and brandId that produces a two results then a two prices are returned")
     public void validParametersReturnsTwoPrices() {
         // Given
-        when(priceEntityRepository.getPricesBy(date, productId, brandId)).thenReturn(List.of(PRICE_ENTITY_1, PRICE_ENTITY_2));
+        when(priceEntityRepository.getPricesBy(date, productId, brandId))
+                .thenReturn(Flux.fromIterable(List.of(PRICE_ENTITY_1, PRICE_ENTITY_2)));
         when(priceEntityMapper.toPrice(PRICE_ENTITY_1)).thenReturn(PRICE_1);
         when(priceEntityMapper.toPrice(PRICE_ENTITY_2)).thenReturn(PRICE_2);
 
@@ -106,7 +99,7 @@ public class PriceDaoAdapterTest {
     @DisplayName("Given a date, productId and brandId that not produces a result then no price is returned")
     public void validParametersReturnsNoPrice() {
         // Given
-        when(priceEntityRepository.getPricesBy(date, productId, brandId)).thenReturn(List.of());
+        when(priceEntityRepository.getPricesBy(date, productId, brandId)).thenReturn(Flux.empty());
 
         // When
         Flux<Price> result = classToTest.getPricesBy(date, productId, brandId);

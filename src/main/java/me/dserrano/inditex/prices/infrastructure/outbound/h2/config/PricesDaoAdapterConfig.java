@@ -1,24 +1,27 @@
 package me.dserrano.inditex.prices.infrastructure.outbound.h2.config;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import io.r2dbc.spi.ConnectionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import reactor.core.scheduler.Scheduler;
-import reactor.core.scheduler.Schedulers;
-
-import java.util.concurrent.Executors;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.r2dbc.connection.init.ConnectionFactoryInitializer;
+import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator;
 
 @Configuration
-@EnableConfigurationProperties
 public class PricesDaoAdapterConfig {
-
-    @Value("${spring.datasource.hikari.maximum-pool-size}")
-    private int connectionPoolSize;
-
     @Bean
-    public Scheduler jdbcScheduler() {
-        return Schedulers.fromExecutor(Executors.newFixedThreadPool(connectionPoolSize));
+    public ResourceDatabasePopulator databasePopulator() {
+        return new ResourceDatabasePopulator(new ClassPathResource("data.sql"));
     }
 
+    @Bean
+    public ConnectionFactoryInitializer databaseInitializer(
+            ConnectionFactory connectionFactory,
+            ResourceDatabasePopulator populator
+    ) {
+        ConnectionFactoryInitializer initializer = new ConnectionFactoryInitializer();
+        initializer.setConnectionFactory(connectionFactory);
+        initializer.setDatabasePopulator(populator);
+        return initializer;
+    }
 }
