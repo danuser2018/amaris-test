@@ -7,10 +7,9 @@ import me.dserrano.inditex.prices.infrastructure.outbound.h2.repository.PriceEnt
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class PricesDaoAdapter implements PricesDao {
@@ -26,12 +25,8 @@ public class PricesDaoAdapter implements PricesDao {
 
     @Override
     @NotNull
-    public List<Price> getPricesBy(@NotNull LocalDateTime date, @NotNull String productId, @NotNull String brandId) {
-
-        return priceEntityRepository.getPricesBy(date, productId, brandId)
-                .stream()
-                .map(priceEntityMapper::toPrice)
-                .collect(Collectors.toList());
-
+    public Flux<Price> getPricesBy(@NotNull LocalDateTime date, @NotNull String productId, @NotNull String brandId) {
+        return Flux.defer(() -> Flux.fromIterable(priceEntityRepository.getPricesBy(date, productId, brandId)))
+                .map(priceEntityMapper::toPrice);
     }
 }

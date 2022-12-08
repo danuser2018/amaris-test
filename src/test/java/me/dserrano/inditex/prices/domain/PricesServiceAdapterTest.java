@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -35,7 +36,7 @@ public class PricesServiceAdapterTest {
     @DisplayName("Given a date, productId and brandId that produces a result then a Price is returned")
     public void validParametersReturnsAPrice() {
         // Given
-        when(pricesDao.getPricesBy(date, productId, brandId)).thenReturn(List.of(PRICE_1));
+        when(pricesDao.getPricesBy(date, productId, brandId)).thenReturn(Flux.just(PRICE_1));
 
         // When
         Mono<Price> result = classToTest.getPricesBy(date, productId, brandId);
@@ -43,17 +44,18 @@ public class PricesServiceAdapterTest {
         // Then
         StepVerifier.create(result)
                 .expectNext(PRICE_1)
-                .expectComplete();
+                .expectComplete()
+                .verify();
     }
 
     @Test
     @DisplayName("Given a date, productId and brandId then secondary port is invoked")
     public void validRequestInvokeSecondaryPort() {
         // Given
-        when(pricesDao.getPricesBy(date, productId, brandId)).thenReturn(List.of(PRICE_1));
+        when(pricesDao.getPricesBy(date, productId, brandId)).thenReturn(Flux.just(PRICE_1));
 
         // When
-        classToTest.getPricesBy(date, productId, brandId);
+        Mono<Price> result = classToTest.getPricesBy(date, productId, brandId);
 
         // Then
         verify(pricesDao).getPricesBy(date, productId, brandId);
@@ -63,7 +65,7 @@ public class PricesServiceAdapterTest {
     @DisplayName("Given a date, productId and brandId that results in more than one price, then the one with most priority is returned")
     public void validRequestForTwoPricesReturnsTheOneWithMostPriority() {
         // Given
-        when(pricesDao.getPricesBy(date, productId, brandId)).thenReturn(List.of(PRICE_1, PRICE_2));
+        when(pricesDao.getPricesBy(date, productId, brandId)).thenReturn(Flux.fromIterable(List.of(PRICE_1, PRICE_2)));
 
         // When
         Mono<Price> result = classToTest.getPricesBy(date, productId, brandId);
@@ -71,20 +73,22 @@ public class PricesServiceAdapterTest {
         // Then
         StepVerifier.create(result)
                 .expectNext(PRICE_2)
-                .expectComplete();
+                .expectComplete()
+                .verify();
     }
 
     @Test
     @DisplayName("Given a date, productId and brandId that results in no price, then an empty Mono is returned")
     public void validRequestReturnsNoPrice() {
         // Given
-        when(pricesDao.getPricesBy(date, productId, brandId)).thenReturn(List.of());
+        when(pricesDao.getPricesBy(date, productId, brandId)).thenReturn(Flux.empty());
 
         // When
         Mono<Price> result = classToTest.getPricesBy(date, productId, brandId);
 
         // Then
         StepVerifier.create(result)
-                .expectComplete();
+                .expectComplete()
+                .verify();
     }
 }

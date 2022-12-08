@@ -44,6 +44,7 @@ public class PricesControllerTest {
     public void validRequestReturnsOKAndPrice() {
         // Given
         when(pricesService.getPricesBy(date, productId, brandId)).thenReturn(Mono.just(PRICE_1));
+        when(priceMapper.toPricesResponse(PRICE_1)).thenReturn(PRICES_RESPONSE_1);
 
         // When
         Mono<ResponseEntity<PricesResponse>> result = classToTest.getPrices(date, productId, brandId);
@@ -54,7 +55,8 @@ public class PricesControllerTest {
                     assertEquals(OK, response.getStatusCode());
                     assertEquals(PRICES_RESPONSE_1, response.getBody());
                 })
-                .expectComplete();
+                .expectComplete()
+                .verify();
     }
 
     @Test
@@ -84,6 +86,9 @@ public class PricesControllerTest {
                 .assertNext(response -> {
                     assertEquals(NO_CONTENT, response.getStatusCode());
                     assertNull(response.getBody());
-                });
+                })
+                .expectComplete()
+                .verify();
+        ;
     }
 }
