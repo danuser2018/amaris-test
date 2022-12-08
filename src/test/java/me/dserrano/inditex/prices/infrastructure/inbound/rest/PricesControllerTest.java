@@ -33,7 +33,7 @@ public class PricesControllerTest {
     private PriceMapper priceMapper;
 
     @InjectMocks
-    private PricesController classToTest;
+    private PricesController pricesController;
 
     private final LocalDateTime date = LocalDateTime.of(2020, 6, 14, 10, 0, 0);
     private final String productId = "35455";
@@ -47,7 +47,7 @@ public class PricesControllerTest {
         when(priceMapper.toPricesResponse(PRICE_1)).thenReturn(PRICES_RESPONSE_1);
 
         // When
-        Mono<ResponseEntity<PricesResponse>> result = classToTest.getPrices(date, productId, brandId);
+        Mono<ResponseEntity<PricesResponse>> result = pricesController.getPrices(date, productId, brandId);
 
         // Then
         StepVerifier.create(result)
@@ -66,7 +66,7 @@ public class PricesControllerTest {
         when(pricesService.getPricesBy(date, productId, brandId)).thenReturn(Mono.just(PRICE_1));
 
         // When
-        classToTest.getPrices(date, productId, brandId);
+        pricesController.getPrices(date, productId, brandId);
 
         // Then
         verify(pricesService).getPricesBy(date, productId, brandId);
@@ -79,7 +79,7 @@ public class PricesControllerTest {
         when(pricesService.getPricesBy(date, productId, brandId)).thenReturn(Mono.empty());
 
         // When
-        Mono<ResponseEntity<PricesResponse>> result = classToTest.getPrices(date, productId, brandId);
+        Mono<ResponseEntity<PricesResponse>> result = pricesController.getPrices(date, productId, brandId);
 
         // Then
         StepVerifier.create(result)
@@ -89,6 +89,5 @@ public class PricesControllerTest {
                 })
                 .expectComplete()
                 .verify();
-        ;
     }
 }
