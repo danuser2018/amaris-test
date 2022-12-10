@@ -60,10 +60,13 @@ los datos del ejemplo:
 - Calidad de Código
 - Resultados correctos en los test
 
+## Solución
+
+El servicio se ha implementado mediante un microservicio basado en spring-boot.
 
 ## Licencia
 
-Copyright © 2021 David Núñez Serrano
+Copyright © 2021-2022 David Núñez Serrano
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and 
 associated documentation files (the “Software”), to deal in the Software without restriction, 
