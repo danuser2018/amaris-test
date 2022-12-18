@@ -1,12 +1,11 @@
-package me.dserrano.inditex.prices.infrastructure.outbound.h2.model;
+package me.dserrano.inditex.prices.infrastructure.outbound.mongo.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class PriceEntityMother {
+public class PriceDocumentMother {
 
-    public static final PriceEntity PRICE_ENTITY_1 = PriceEntity.builder()
-            .id(1L)
+    public static final PriceDocument PRICE_DOCUMENT_1 = PriceDocument.builder()
             .productId("35455")
             .brandId("1")
             .priceList("1")
@@ -17,8 +16,7 @@ public class PriceEntityMother {
             .priority(0)
             .build();
 
-    public static final PriceEntity PRICE_ENTITY_2 = PriceEntity.builder()
-            .id(2L)
+    public static final PriceDocument PRICE_DOCUMENT_2 = PriceDocument.builder()
             .productId("35455")
             .brandId("1")
             .priceList("2")
@@ -29,8 +27,7 @@ public class PriceEntityMother {
             .priority(1)
             .build();
 
-    public static final PriceEntity PRICE_ENTITY_3 = PriceEntity.builder()
-            .id(3L)
+    public static final PriceDocument PRICE_DOCUMENT_3 = PriceDocument.builder()
             .productId("35455")
             .brandId("1")
             .priceList("3")
@@ -41,8 +38,7 @@ public class PriceEntityMother {
             .priority(1)
             .build();
 
-    public static final PriceEntity PRICE_ENTITY_4 = PriceEntity.builder()
-            .id(4L)
+    public static final PriceDocument PRICE_DOCUMENT_4 = PriceDocument.builder()
             .productId("35455")
             .brandId("1")
             .priceList("4")
@@ -52,5 +48,4 @@ public class PriceEntityMother {
             .currency("EUR")
             .priority(1)
             .build();
-
 }
