@@ -1,7 +1,5 @@
 spring:
-  h2.console.enabled: true
-  r2dbc:
-    url: r2dbc:h2:mem:///testdb
-    username: sa
-    password: password
-    initialization-mode: always
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/prices
+

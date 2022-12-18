@@ -1,22 +1,55 @@
 package me.dserrano.inditex.prices;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
+import reactor.core.publisher.Flux;
 
+import java.util.List;
+
+import static me.dserrano.inditex.prices.infrastructure.outbound.mongo.model.PriceDocumentMother.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureWebTestClient
+@Testcontainers
+@DirtiesContext
 class PricesApplicationIT {
+
+    @Container
+    static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:6.0.3"));
+
+    @DynamicPropertySource
+    static void setProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+    }
+
+    @Autowired
+    private ReactiveMongoTemplate mongoTemplate;
 
     @Autowired
     private WebTestClient webTestClient;
+
+    @BeforeEach
+    void beforeEach() {
+        Flux.fromIterable(
+                List.of(PRICE_DOCUMENT_1, PRICE_DOCUMENT_2, PRICE_DOCUMENT_3, PRICE_DOCUMENT_4)
+        ).subscribe(price -> mongoTemplate.save(price, "prices").block());
+    }
 
     @Test
     @DisplayName("Petición a las 10:00 del día 14 del producto 35455 para la brand 1 (ZARA)")

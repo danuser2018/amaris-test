@@ -1,8 +1,9 @@
-package me.dserrano.inditex.prices.infrastructure.outbound.h2;
+package me.dserrano.inditex.prices.infrastructure.outbound.mongo;
 
 import me.dserrano.inditex.prices.domain.model.Price;
-import me.dserrano.inditex.prices.infrastructure.outbound.h2.mapper.PriceEntityMapper;
-import me.dserrano.inditex.prices.infrastructure.outbound.h2.repository.PriceEntityRepository;
+import me.dserrano.inditex.prices.infrastructure.outbound.mongo.mapper.PriceDocumentMapper;
+import me.dserrano.inditex.prices.infrastructure.outbound.mongo.repository.PriceDocumentRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,22 +18,21 @@ import java.util.List;
 
 import static me.dserrano.inditex.prices.domain.model.PriceMother.PRICE_1;
 import static me.dserrano.inditex.prices.domain.model.PriceMother.PRICE_2;
-import static me.dserrano.inditex.prices.infrastructure.outbound.h2.model.PriceEntityMother.PRICE_ENTITY_1;
-import static me.dserrano.inditex.prices.infrastructure.outbound.h2.model.PriceEntityMother.PRICE_ENTITY_2;
+import static me.dserrano.inditex.prices.infrastructure.outbound.mongo.model.PriceDocumentMother.PRICE_DOCUMENT_1;
+import static me.dserrano.inditex.prices.infrastructure.outbound.mongo.model.PriceDocumentMother.PRICE_DOCUMENT_2;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class H2PricesDaoAdapterTest {
+class MongoPricesDaoAdapterTest {
+    @Mock
+    private PriceDocumentRepository priceDocumentRepository;
 
     @Mock
-    private PriceEntityRepository priceEntityRepository;
-
-    @Mock
-    private PriceEntityMapper priceEntityMapper;
+    private PriceDocumentMapper priceDocumentMapper;
 
     @InjectMocks
-    private H2PricesDaoAdapter pricesDaoAdapter;
+    private MongoPricesDaoAdapter pricesDaoAdapter;
 
     private final LocalDateTime date = LocalDateTime.of(2020, 6, 14, 10, 0, 0);
     private final String productId = "35455";
@@ -42,8 +42,8 @@ public class H2PricesDaoAdapterTest {
     @DisplayName("Given a date, productId and brandId that produces a result then a Price is returned")
     public void validParametersReturnsAPrice() {
         // Given
-        when(priceEntityRepository.getPricesBy(date, productId, brandId)).thenReturn(Flux.just(PRICE_ENTITY_1));
-        when(priceEntityMapper.toPrice(PRICE_ENTITY_1)).thenReturn(PRICE_1);
+        when(priceDocumentRepository.findPricesBy(date, productId, brandId)).thenReturn(Flux.just(PRICE_DOCUMENT_1));
+        when(priceDocumentMapper.toPrice(PRICE_DOCUMENT_1)).thenReturn(PRICE_1);
 
         // When
         Flux<Price> result = pricesDaoAdapter.getPricesBy(date, productId, brandId);
@@ -51,38 +51,30 @@ public class H2PricesDaoAdapterTest {
         // Then
         StepVerifier.create(result)
                 .expectNext(PRICE_1)
-                .expectComplete()
-                .verify();
+                .verifyComplete();
     }
 
     @Test
     @DisplayName("Given a date, productId and brandId then repository is invoked")
     public void validParametersInvokeRepository() {
         // Given
-        when(priceEntityRepository.getPricesBy(date, productId, brandId)).thenReturn(Flux.just(PRICE_ENTITY_1));
-        when(priceEntityMapper.toPrice(PRICE_ENTITY_1)).thenReturn(PRICE_1);
+        when(priceDocumentRepository.findPricesBy(date, productId, brandId)).thenReturn(Flux.just(PRICE_DOCUMENT_1));
 
         // When
-        Flux<Price> result = pricesDaoAdapter.getPricesBy(date, productId, brandId);
+        pricesDaoAdapter.getPricesBy(date, productId, brandId);
 
         // Then
-        StepVerifier.create(result)
-                .expectNext(PRICE_1)
-                .expectComplete()
-                .verify();
-
-        // Then
-        verify(priceEntityRepository).getPricesBy(date, productId, brandId);
+        verify(priceDocumentRepository).findPricesBy(date, productId, brandId);
     }
 
     @Test
     @DisplayName("Given a date, productId and brandId that produces a two results then a two prices are returned")
     public void validParametersReturnsTwoPrices() {
         // Given
-        when(priceEntityRepository.getPricesBy(date, productId, brandId))
-                .thenReturn(Flux.fromIterable(List.of(PRICE_ENTITY_1, PRICE_ENTITY_2)));
-        when(priceEntityMapper.toPrice(PRICE_ENTITY_1)).thenReturn(PRICE_1);
-        when(priceEntityMapper.toPrice(PRICE_ENTITY_2)).thenReturn(PRICE_2);
+        when(priceDocumentRepository.findPricesBy(date, productId, brandId)).thenReturn(
+                Flux.fromIterable(List.of(PRICE_DOCUMENT_1, PRICE_DOCUMENT_2)));
+        when(priceDocumentMapper.toPrice(PRICE_DOCUMENT_1)).thenReturn(PRICE_1);
+        when(priceDocumentMapper.toPrice(PRICE_DOCUMENT_2)).thenReturn(PRICE_2);
 
         // When
         Flux<Price> result = pricesDaoAdapter.getPricesBy(date, productId, brandId);
@@ -91,22 +83,19 @@ public class H2PricesDaoAdapterTest {
         StepVerifier.create(result)
                 .expectNext(PRICE_1)
                 .expectNext(PRICE_2)
-                .expectComplete()
-                .verify();
+                .verifyComplete();
     }
 
     @Test
     @DisplayName("Given a date, productId and brandId that not produces a result then no price is returned")
     public void validParametersReturnsNoPrice() {
         // Given
-        when(priceEntityRepository.getPricesBy(date, productId, brandId)).thenReturn(Flux.empty());
+        when(priceDocumentRepository.findPricesBy(date, productId, brandId)).thenReturn(Flux.empty());
 
         // When
         Flux<Price> result = pricesDaoAdapter.getPricesBy(date, productId, brandId);
 
         // Then
-        StepVerifier.create(result)
-                .expectComplete()
-                .verify();
+        StepVerifier.create(result).verifyComplete();
     }
 }
